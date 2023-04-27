@@ -1,4 +1,7 @@
 from django.urls import path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view as swagger_get_schema_view
+
 from .views import (
     magazines_list,
     magazine_create,
@@ -22,6 +25,14 @@ from .views import (
     buyer_add_magazine,
     buyer_update_or_delete_magazine,
     magazine_update_buyers, author_stats
+)
+schema_view = swagger_get_schema_view(
+    openapi.Info(
+        title="MAGAZINES API",
+        default_version="1.0.0",
+        description="API documentation"
+    ),
+    public=True,
 )
 
 urlpatterns = [
@@ -47,5 +58,5 @@ urlpatterns = [
     path('magazines/<int:id>/buyers/<int:buyer_id>/', magazine_update_or_delete_buyer, name='magazine-update-or-delete-buyer'),
     path('buyers/<int:id>/magazines/', buyer_add_magazine, name='buyer-add-magazine'),
     path('buyers/<int:id>/magazines/<int:magazine_id>/', buyer_update_or_delete_magazine, name='buyer-update-or-delete-magazine'),
-    path('magazines/<int:id>/buyers/update', magazine_update_buyers)
-]
+    path('magazines/<int:id>/buyers/update', magazine_update_buyers),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-schema')]
