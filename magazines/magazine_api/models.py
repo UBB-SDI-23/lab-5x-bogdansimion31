@@ -30,6 +30,7 @@ class Publisher(models.Model):
 class Buyer(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
+    text = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
