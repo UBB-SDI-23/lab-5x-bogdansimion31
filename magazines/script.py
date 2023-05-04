@@ -64,10 +64,11 @@ print("Publishers generated")
 for i in range(1000000):
     name = fake.name()
     email = fake.email()
+    text = fake.sentence(nb_words=3)
 
     # SQL query to insert a Buyer record
-    query = "INSERT INTO magazine_api_buyer (name, email) VALUES (%s, %s)"
-    values = (name, email)
+    query = "INSERT INTO magazine_api_buyer (name, email, text) VALUES (%s, %s, %s)"
+    values = (name, email, text)
 
     # Execute the SQL query
     cur.execute(query, values)
