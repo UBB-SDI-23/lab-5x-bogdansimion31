@@ -1,7 +1,8 @@
-import timedelta as timedelta
 from django.contrib.auth import get_user_model
 from faker import Faker
 import psycopg2
+from datetime import timedelta
+from random import randint
 import random
 
 # Connect to the PostgreSQL database
@@ -113,7 +114,7 @@ buyers = User.objects.filter(is_staff=False)
 for buyer in buyers:
     # Generate a random start and end date
     start_date = fake.date_between(start_date='-5y', end_date='today')
-    end_date = start_date + timedelta(days=random.randint(30, 365))
+    end_date = start_date + timedelta(days=randint(30, 365))
 
     # Create a new BuyerSubscription object
     subscription = BuyerSubscription(buyer=buyer, start_date=start_date, end_date=end_date)
