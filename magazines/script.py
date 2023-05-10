@@ -6,7 +6,7 @@ from random import randint
 import random
 
 # Connect to the PostgreSQL database
-from magazines.magazine_api.models import BuyerSubscription
+from magazine_api.models import BuyerSubscription
 
 conn = psycopg2.connect(
     host="localhost",
