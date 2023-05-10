@@ -1,8 +1,5 @@
-from django.contrib.auth import get_user_model
 from faker import Faker
 import psycopg2
-from datetime import timedelta
-from random import randint
 import random
 
 # Connect to the PostgreSQL database
@@ -106,24 +103,32 @@ fake = Faker()
 #
 # print("Magazines generated")
 
-User = get_user_model()
-# Get all buyers from the database
-buyers = User.objects.filter(is_staff=False)
+# Get the IDs of all Buyers
+cur.execute("SELECT id FROM magazine_api_buyer")
+buyer_ids = [row[0] for row in cur.fetchall()]
 
-# Generate and insert BuyerSubscription records for each buyer
-for buyer in buyers:
-    # Generate a random start and end date
-    start_date = fake.date_between(start_date='-5y', end_date='today')
-    end_date = start_date + timedelta(days=randint(30, 365))
+# Generate and insert 1,000,000 BuyerSubscription records
+for i in range(1000000):
+    buyer_id = random.choice(buyer_ids)
+    start_date = fake.date_between(start_date="-1y", end_date="today")
+    end_date = fake.date_between(start_date=start_date, end_date="+1y")
 
-    # Create a new BuyerSubscription object
-    subscription = BuyerSubscription(buyer=buyer, start_date=start_date, end_date=end_date)
+    # SQL query to insert a BuyerSubscription record
+    query = "INSERT INTO magazine_api_buyersubscription (buyer_id, start_date, end_date) VALUES (%s, %s, %s)"
+    values = (buyer_id, start_date, end_date)
 
-    # Save the BuyerSubscription to the database
-    subscription.save()
+    # Execute the SQL query
+    try:
+        cur.execute(query, values)
+    except psycopg2.errors.UniqueViolation:
+        # Skip the insertion if a unique constraint violation error is thrown
+        conn.rollback()
+        continue
 
-print("BuyerSubscriptions generated")
-
+    # Commit the changes to the database
+    if i % 1000 == 0:
+        conn.commit()
+        
 # Get the IDs of all Authors and Publishers
 cur.execute("SELECT id FROM magazine_api_author")
 author_ids = [row[0] for row in cur.fetchall()]
