@@ -17,48 +17,48 @@ cur = conn.cursor()
 fake = Faker()
 
 # Generate and insert 1,000,000 Author records
-for i in range(1000000):
-    first_name = fake.first_name()
-    last_name = fake.last_name()
-    birth_date = fake.date_of_birth()
-    email = fake.email()
-    website = fake.url()
-
-    # SQL query to insert an Author record
-    query = "INSERT INTO magazine_api_author (first_name, last_name, birth_date, email, website) VALUES (%s, %s, %s, %s, %s)"
-    values = (first_name, last_name, birth_date, email, website)
-
-    # Execute the SQL query
-    cur.execute(query, values)
-
-    # Commit the changes to the database
-    if i % 1000 == 0:
-        conn.commit()
-
-print("Authors generated")
-
-
-# Generate and insert 1,000,000 Publisher records
-for i in range(1000000):
-    name = fake.company()
-    address = fake.address()
-    city = fake.city()
-    country = fake.country()
-    website = fake.url()
-    age = random.randint(20, 80)
-
-    # SQL query to insert a Publisher record
-    query = "INSERT INTO magazine_api_publisher (name, address, city, country, website, age) VALUES (%s, %s, %s, %s, %s, %s)"
-    values = (name, address, city, country, website, age)
-
-    # Execute the SQL query
-    cur.execute(query, values)
-
-    # Commit the changes to the database
-    if i % 1000 == 0:
-        conn.commit()
-
-print("Publishers generated")
+# for i in range(1000000):
+#     first_name = fake.first_name()
+#     last_name = fake.last_name()
+#     birth_date = fake.date_of_birth()
+#     email = fake.email()
+#     website = fake.url()
+#
+#     # SQL query to insert an Author record
+#     query = "INSERT INTO magazine_api_author (first_name, last_name, birth_date, email, website) VALUES (%s, %s, %s, %s, %s)"
+#     values = (first_name, last_name, birth_date, email, website)
+#
+#     # Execute the SQL query
+#     cur.execute(query, values)
+#
+#     # Commit the changes to the database
+#     if i % 1000 == 0:
+#         conn.commit()
+#
+# print("Authors generated")
+#
+#
+# # Generate and insert 1,000,000 Publisher records
+# for i in range(1000000):
+#     name = fake.company()
+#     address = fake.address()
+#     city = fake.city()
+#     country = fake.country()
+#     website = fake.url()
+#     age = random.randint(20, 80)
+#
+#     # SQL query to insert a Publisher record
+#     query = "INSERT INTO magazine_api_publisher (name, address, city, country, website, age) VALUES (%s, %s, %s, %s, %s, %s)"
+#     values = (name, address, city, country, website, age)
+#
+#     # Execute the SQL query
+#     cur.execute(query, values)
+#
+#     # Commit the changes to the database
+#     if i % 1000 == 0:
+#         conn.commit()
+#
+# print("Publishers generated")
 
 # Generate and insert 1,000,000 Buyer records
 for i in range(1000000):
