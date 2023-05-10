@@ -163,7 +163,7 @@ for i in range(1000000):
             text = fake.sentence(nb_words=3)
 
             # SQL query to insert a Buyer record
-            query = "INSERT INTO magazine_api_buyer (name, email, text) VALUES (%s, %s) RETURNING id"
+            query = "INSERT INTO magazine_api_buyer (name, email, text) VALUES (%s, %s, %s) RETURNING id"
             values = (name, email, text)
 
             try:
