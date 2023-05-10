@@ -103,30 +103,30 @@ fake = Faker()
 # print("Magazines generated")
 
 # Get the IDs of all Buyers
-cur.execute("SELECT id FROM magazine_api_buyer")
-buyer_ids = [row[0] for row in cur.fetchall()]
-
-# Generate and insert 1,000,000 BuyerSubscription records
-for i in range(1000000):
-    buyer_id = random.choice(buyer_ids)
-    start_date = fake.date_between(start_date="-1y", end_date="today")
-    end_date = fake.date_between(start_date=start_date, end_date="+1y")
-
-    # SQL query to insert a BuyerSubscription record
-    query = "INSERT INTO magazine_api_buyersubscription (buyer_id, start_date, end_date) VALUES (%s, %s, %s)"
-    values = (buyer_id, start_date, end_date)
-
-    # Execute the SQL query
-    try:
-        cur.execute(query, values)
-    except psycopg2.errors.UniqueViolation:
-        # Skip the insertion if a unique constraint violation error is thrown
-        conn.rollback()
-        continue
-
-    # Commit the changes to the database
-    if i % 1000 == 0:
-        conn.commit()
+# cur.execute("SELECT id FROM magazine_api_buyer")
+# buyer_ids = [row[0] for row in cur.fetchall()]
+#
+# # Generate and insert 1,000,000 BuyerSubscription records
+# for i in range(1000000):
+#     buyer_id = random.choice(buyer_ids)
+#     start_date = fake.date_between(start_date="-1y", end_date="today")
+#     end_date = fake.date_between(start_date=start_date, end_date="+1y")
+#
+#     # SQL query to insert a BuyerSubscription record
+#     query = "INSERT INTO magazine_api_buyersubscription (buyer_id, start_date, end_date) VALUES (%s, %s, %s)"
+#     values = (buyer_id, start_date, end_date)
+#
+#     # Execute the SQL query
+#     try:
+#         cur.execute(query, values)
+#     except psycopg2.errors.UniqueViolation:
+#         # Skip the insertion if a unique constraint violation error is thrown
+#         conn.rollback()
+#         continue
+#
+#     # Commit the changes to the database
+#     if i % 1000 == 0:
+#         conn.commit()
 
 # Get the IDs of all Authors and Publishers
 cur.execute("SELECT id FROM magazine_api_author")
@@ -160,10 +160,11 @@ for i in range(1000000):
         for j in range(random.randint(1, 5)):
             name = fake.name()
             email = fake.email()
+            text = fake.sentence(nb_words=3)
 
             # SQL query to insert a Buyer record
-            query = "INSERT INTO magazine_api_buyer (name, email) VALUES (%s, %s) RETURNING id"
-            values = (name, email)
+            query = "INSERT INTO magazine_api_buyer (name, email, text) VALUES (%s, %s) RETURNING id"
+            values = (name, email, text)
 
             try:
                 # Execute the SQL query
