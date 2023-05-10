@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'bogdansimion',
         'USER': 'bogdansimion',
         'PASSWORD': 'password',
-        'HOST': 'localhost'
+        'HOST': 'jdbc:postgresql://database.cjwrycpizfp2.eu-north-1.rds.amazonaws.com:5432/database'
     }
 }
 
