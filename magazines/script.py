@@ -3,7 +3,6 @@ import psycopg2
 import random
 
 # Connect to the PostgreSQL database
-from magazine_api.models import BuyerSubscription
 
 conn = psycopg2.connect(
     host="localhost",
@@ -128,7 +127,7 @@ for i in range(1000000):
     # Commit the changes to the database
     if i % 1000 == 0:
         conn.commit()
-        
+
 # Get the IDs of all Authors and Publishers
 cur.execute("SELECT id FROM magazine_api_author")
 author_ids = [row[0] for row in cur.fetchall()]
