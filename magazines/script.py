@@ -125,7 +125,7 @@ for i in range(1000000):
         continue
 
     # Commit the changes to the database
-    if i % 1000 == 0:
+    if i % 100 == 0:
         conn.commit()
 
 # Get the IDs of all Authors and Publishers
