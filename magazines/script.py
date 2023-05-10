@@ -1,8 +1,12 @@
+import timedelta as timedelta
+from django.contrib.auth import get_user_model
 from faker import Faker
 import psycopg2
 import random
 
 # Connect to the PostgreSQL database
+from magazines.magazine_api.models import BuyerSubscription
+
 conn = psycopg2.connect(
     host="localhost",
     database="bogdansimion",
@@ -61,23 +65,23 @@ fake = Faker()
 # print("Publishers generated")
 
 # Generate and insert 1,000,000 Buyer records
-for i in range(1000000):
-    name = fake.name()
-    email = fake.email()
-    text = fake.sentence(nb_words=3)
-
-    # SQL query to insert a Buyer record
-    query = "INSERT INTO magazine_api_buyer (name, email, text) VALUES (%s, %s, %s)"
-    values = (name, email, text)
-
-    # Execute the SQL query
-    cur.execute(query, values)
-
-    # Commit the changes to the database
-    if i % 1000 == 0:
-        conn.commit()
-
-print("Buyers generated")
+# for i in range(1000000):
+#     name = fake.name()
+#     email = fake.email()
+#     text = fake.sentence(nb_words=3)
+#
+#     # SQL query to insert a Buyer record
+#     query = "INSERT INTO magazine_api_buyer (name, email, text) VALUES (%s, %s, %s)"
+#     values = (name, email, text)
+#
+#     # Execute the SQL query
+#     cur.execute(query, values)
+#
+#     # Commit the changes to the database
+#     if i % 1000 == 0:
+#         conn.commit()
+#
+# print("Buyers generated")
 
 # # Generate and insert 10,000,000 Magazine records
 # for i in range(10000000):
@@ -101,25 +105,21 @@ print("Buyers generated")
 #
 # print("Magazines generated")
 
-# Generate and insert 1,000,000 BuyerSubscription records
-for i in range(990000):
-    # Select a random buyer from the database with ID up to 999000
-    buyer_id = i+1
+User = get_user_model()
+# Get all buyers from the database
+buyers = User.objects.filter(is_staff=False)
 
+# Generate and insert BuyerSubscription records for each buyer
+for buyer in buyers:
     # Generate a random start and end date
     start_date = fake.date_between(start_date='-5y', end_date='today')
-    end_date = fake.date_between(start_date=start_date, end_date='+1y')
+    end_date = start_date + timedelta(days=random.randint(30, 365))
 
-    # SQL query to insert a BuyerSubscription record
-    query = "INSERT INTO magazine_api_buyersubscription (buyer_id, start_date, end_date) VALUES (%s, %s, %s)"
-    values = (buyer_id, start_date, end_date)
+    # Create a new BuyerSubscription object
+    subscription = BuyerSubscription(buyer=buyer, start_date=start_date, end_date=end_date)
 
-    # Execute the SQL query
-    cur.execute(query, values)
-
-    # Commit the changes to the database
-    if i % 1000 == 0:
-        conn.commit()
+    # Save the BuyerSubscription to the database
+    subscription.save()
 
 print("BuyerSubscriptions generated")
 
