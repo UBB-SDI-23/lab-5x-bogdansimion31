@@ -3,9 +3,10 @@ import datetime
 from django.db.models import Avg, Case, ExpressionWrapper, F, fields, When
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import status, viewsets
 from .models import Magazine, Author, Publisher, Buyer, BuyerSubscription, PublisherStatsDTO, Purchase, AuthorStatsDTO
 from .serializer import MagazineSerializer, AuthorSerializer, PublisherSerializer, BuyerSerializer, \
     BuyerSubscriptionSerializer, PublisherStatsDTOSerializer, AuthorStatsDTOSerializer
@@ -16,12 +17,18 @@ from .serializer import MagazineSerializer, AuthorSerializer, PublisherSerialize
 # magazines/list
 
 
+# @api_view(['GET'])
+# def magazines_list(request):
+#     magazines = Magazine.objects.all()  # complex data
+#     serializer = MagazineSerializer(magazines, many=True)
+#     return Response(serializer.data)
 @api_view(['GET'])
 def magazines_list(request):
+    paginator = PageNumberPagination()
     magazines = Magazine.objects.all()  # complex data
-    serializer = MagazineSerializer(magazines, many=True)
-    return Response(serializer.data)
-
+    result_page = paginator.paginate_queryset(magazines, request)
+    serializer = MagazineSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 def magazine_create(request):
