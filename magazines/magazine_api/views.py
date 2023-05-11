@@ -25,9 +25,10 @@ from .serializer import MagazineSerializer, AuthorSerializer, PublisherSerialize
 @api_view(['GET'])
 def magazines_list(request):
     paginator = PageNumberPagination()
+    paginator.page_size = 10  # set the number of items per page
     magazines = Magazine.objects.all()  # complex data
-    result_page = paginator.paginate_queryset(magazines, request)
-    serializer = MagazineSerializer(result_page, many=True)
+    paginated_magazines = paginator.paginate_queryset(magazines, request)
+    serializer = MagazineSerializer(paginated_magazines, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
