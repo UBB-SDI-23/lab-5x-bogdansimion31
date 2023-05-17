@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,6 +6,7 @@ import {
   Container,
   IconButton,
   InputLabel,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -20,26 +21,33 @@ import {
 import { Magazine } from "../../interfaces/Magazine";
 import { BASE_URL } from "../../constants";
 import { Link } from "react-router-dom";
-import { Add, DeleteForever, Edit, ReadMore } from "@mui/icons-material";
+import { Add, DeleteForever, Edit, NumbersRounded, ReadMore } from "@mui/icons-material";
 
 const MagazinesPage = () => {
   const [loading, setLoading] = useState(false);
   const [magazines, setMagazines] = useState<Magazine[]>();
   const [minPages, setMinPages] = useState<number>();
+  const [currentPage, setCurrentPage] = useState(1); // Added state for current page
+  const [totalPages, setTotalPages] = useState(0); // Added state for total pages
 
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+  };
+  
+  // Inside the fetchMagazines() function, update the URL to include the current page parameter
   const fetchMagazines = () => {
     setLoading(true);
-    fetch(`${BASE_URL}/magazines/list/`)
+    fetch(`${BASE_URL}/magazines/pagination/?page=${currentPage}&per_page=10`) // Updated API endpoint with pagination parameters
       .then((response) => response.json())
       .then((data) => {
-        setMagazines(data);
+        setMagazines(data.magazines);
+        setTotalPages(Math.floor(data.total_count/10));
         setLoading(false);
       });
   };
-
   useEffect(() => {
     fetchMagazines();
-  }, []);
+  }, [currentPage]);
 
   
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +122,7 @@ const MagazinesPage = () => {
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Pages</TableCell>
               <TableCell align="right">Quantity</TableCell>
+              <TableCell align="right">No. Buyers</TableCell>
               <TableCell align="right">Operations</TableCell>
             </TableRow>
           </TableHead>
@@ -127,6 +136,8 @@ const MagazinesPage = () => {
                     <TableCell align="right">{magazine.price}</TableCell>
                     <TableCell align="right">{magazine.number_of_pages}</TableCell>
                     <TableCell align="right">{magazine.quantity}</TableCell>
+                    <TableCell align="right">{magazine.buyers.length}</TableCell>
+
                     <TableCell align="right">
                       <IconButton
                         component={Link}
@@ -159,6 +170,15 @@ const MagazinesPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box display="flex" justifyContent="center" mt={2} mb={2}>
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={handlePageChange}
+        color="primary"
+        shape="rounded"
+      />
+    </Box>
     </Container>
   );
 };

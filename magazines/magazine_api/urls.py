@@ -24,7 +24,9 @@ from .views import (
     magazine_update_or_delete_buyer,
     buyer_add_magazine,
     buyer_update_or_delete_magazine,
-    magazine_update_buyers, author_stats
+    magazine_update_buyers, author_stats,
+    magazine_update_buyers, author_stats, magazines_pagination, authors_pagination, buyers_pagination,
+     publishers_pagination
 )
 schema_view = swagger_get_schema_view(
     openapi.Info(
@@ -59,4 +61,13 @@ urlpatterns = [
     path('buyers/<int:id>/magazines/', buyer_add_magazine, name='buyer-add-magazine'),
     path('buyers/<int:id>/magazines/<int:magazine_id>/', buyer_update_or_delete_magazine, name='buyer-update-or-delete-magazine'),
     path('magazines/<int:id>/buyers/update', magazine_update_buyers),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-schema')]
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-schema'),
+    path('magazines/<int:id>/buyers/<int:buyer_id>/', magazine_update_or_delete_buyer, name='magazine-update-or-delete-buyer'),
+    path('buyers/<int:id>/magazines/<int:magazine_id>/', buyer_update_or_delete_magazine, name='buyer-update-or-delete-magazine'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-schema'),
+    path('magazines/pagination/', magazines_pagination, name='magazines_pagination'),
+    path('authors/pagination/', authors_pagination, name='magazines_pagination'),
+    path('publishers/pagination/', publishers_pagination, name='magazines_pagination'),
+    path('buyers/pagination/', buyers_pagination, name='magazines_pagination'),
+
+]

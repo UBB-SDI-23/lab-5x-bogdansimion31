@@ -11,17 +11,92 @@ from .models import Magazine, Author, Publisher, Buyer, BuyerSubscription, Publi
 from .serializer import MagazineSerializer, AuthorSerializer, PublisherSerializer, BuyerSerializer, \
     BuyerSubscriptionSerializer, PublisherStatsDTOSerializer, AuthorStatsDTOSerializer
 
+@api_view(['GET'])
+def magazines_pagination(request):
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('per_page', 10))
 
-# Create your views here.
-# responsible for logic to create or return data
-# magazines/list
+    magazines = Magazine.objects.all()
+    total_count = magazines.count()
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+
+    magazines = magazines[start_index:end_index]
+    serializer = MagazineSerializer(magazines, many=True)
+
+    return Response({
+        'total_count': total_count,
+        'per_page': per_page,
+        'current_page': page,
+        'magazines': serializer.data,
+    })
 
 
-# @api_view(['GET'])
-# def magazines_list(request):
-#     magazines = Magazine.objects.all()  # complex data
-#     serializer = MagazineSerializer(magazines, many=True)
-#     return Response(serializer.data)
+@api_view(['GET'])
+def authors_pagination(request):
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('per_page', 10))
+
+    authors = Author.objects.all()
+    total_count = authors.count()
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+
+    authors = authors[start_index:end_index]
+    serializer = AuthorSerializer(authors, many=True)
+
+    return Response({
+        'total_count': total_count,
+        'per_page': per_page,
+        'current_page': page,
+        'authors': serializer.data,
+    })
+
+@api_view(['GET'])
+def publishers_pagination(request):
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('per_page', 10))
+
+    publishers = Publisher.objects.all()
+    total_count = publishers.count()
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+
+    publishers = publishers[start_index:end_index]
+    serializer = PublisherSerializer(publishers, many=True)
+
+    return Response({
+        'total_count': total_count,
+        'per_page': per_page,
+        'current_page': page,
+        'publishers': serializer.data,
+    })
+
+
+@api_view(['GET'])
+def buyers_pagination(request):
+    page = int(request.GET.get('page', 1))
+    per_page = int(request.GET.get('per_page', 10))
+
+    buyers = Buyer.objects.all()
+    total_count = buyers.count()
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+
+    buyers = buyers[start_index:end_index]
+    serializer = BuyerSerializer(buyers, many=True)
+
+    return Response({
+        'total_count': total_count,
+        'per_page': per_page,
+        'current_page': page,
+        'buyers': serializer.data,
+    })
+
 @api_view(['GET'])
 def magazines_list(request):
     paginator = PageNumberPagination()
