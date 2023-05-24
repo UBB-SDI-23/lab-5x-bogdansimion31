@@ -26,6 +26,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'contchatgpt69@gmail.com'
+# EMAIL_HOST_PASSWORD = 'Parola@123'
+#
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -85,11 +93,12 @@ WSGI_APPLICATION = 'magazine.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'bogdansimion',
         'USER': 'bogdansimion',
         'PASSWORD': 'password',
-        'HOST': 'localhost'
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
